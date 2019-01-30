@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Thevaa Chandereng, Donald Musgrove, Tarek Haddad, Graeme Hickey, Timothy Hanson, Theodore Lystig" />
+
+
+<title>bayesCT: An R package for Simulation in Adaptive Bayesian Clinical Trials</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">bayesCT: An R package for Simulation in Adaptive Bayesian Clinical Trials</h1>
+<h4 class="author"><em>Thevaa Chandereng, Donald Musgrove, Tarek Haddad, Graeme Hickey, Timothy Hanson, Theodore Lystig</em></h4>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#running-bayesct">Running bayesCT</a></li>
+<li><a href="#recruitment">Recruitment</a></li>
+<li><a href="#randomization-scheme">Randomization Scheme</a></li>
+<li><a href="#incorporation-of-historical-data">Incorporation of Historical Data</a></li>
+<li><a href="#early-stopping-for-futility-or-success">Early Stopping for Futility or Success</a><ul>
+<li><a href="#success">Success</a></li>
+<li><a href="#futility">Futility</a></li>
+</ul></li>
+</ul>
+</div>
+
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>Randomized controlled trials (RCT) are the gold standard of pharmaceutical and medical device clinical studies. In a two-armed RCT, subjects are randomized to an intervention arm, with the standard framework being the comparison of a new treatment to an alternative treatment (or no treatment at all). The majority of research in the design of RCTs and their application is based on the frequentist paradigm. In recent years, the adaptive Bayesian trial design approach has gained attention.</p>
+<p>Adaptive Bayesian trials provide added flexibility compared to conventional frequentist approaches in terms of the design and analysis of a clinical trial. Notably, adaptive Bayesian trials can:</p>
+<ul>
+<li>Incorporate historical data, helping to reduce the sample size</li>
+<li>Easily carry out interim analyses to facilitate stopping early for success or futility</li>
+<li>Work with multiple treatment arms (versus a single control), allowing for dropping of demonstrably unsuccessful treatments</li>
+<li>Alter the randomization ratio (e.g., treatment to control ratio) to improve trial efficiency or even to increase trial recruitment</li>
+</ul>
+<p>A fundamental requirement of an adaptive trial is the <em>a priori</em> and interim evaluation of the operating characteristics, e.g., power and type 1 error. In adaptive trials, these operating characteristics generally do not have closed-form solutions; hence, simulation approaches are required. Simulation of adaptive Bayesian trial designs have historically been substantially more complex compared to frequentist approaches. This package removes this complexity obstacle and allows for simulation of adaptive Bayesian trials under a range of designs and outcome types.</p>
+<p><code>bayesCT</code> is an R package for the simulation and analysis of adaptive Bayesian randomzied controlled trials under a range of trial designs and outcome types. Currently, it supports continuous-valued and binary outcome data types, with time-to-event data following soon. The package permits interim analyses of early stopping for futility or success and allows the (optional) incorporation of historical data. Please note this package is still under development.</p>
+<p>If you use <code>bayesCT</code> in published research, please cite: <strong>TBA</strong>.</p>
+<p>If after reading through this vignette you have questions or problems using <code>bayesCT</code>, please post issues at <a href="https://github.com/thevaachandereng/bayesCT/issues" class="uri">https://github.com/thevaachandereng/bayesCT/issues</a>. This will notify the package maintainers and we can work to address the issue(s). Please note that comments and questions should <strong>not</strong> be emailed directly to the package authors.</p>
+</div>
+<div id="running-bayesct" class="section level1">
+<h1>Running bayesCT</h1>
+<p>Prior to analyzing your data, the R package needs to be installed. The easiest way to install <code>bayesCT</code> is through CRAN:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;bayesCT&quot;</span>)</code></pre></div>
+<p>There are additional ways to download <code>bayesCT</code>. The first option is most useful for downloading a specific version of <code>bayesCT</code> (which can be found at <a href="https://github.com/thevaachandereng/bayesCT/releases" class="uri">https://github.com/thevaachandereng/bayesCT/releases</a>):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;thevaachandereng/bayesCT@vx.xx.x&quot;</span>)
+
+<span class="co"># or </span>
+
+devtools<span class="op">::</span><span class="kw">install_version</span>(<span class="st">&quot;bayesCT&quot;</span>, <span class="dt">version =</span> <span class="st">&quot;x.x.x&quot;</span>, <span class="dt">repos =</span> <span class="st">&quot;http://cran.us.r-project.org&quot;</span>)</code></pre></div>
+<p>The second option is to download the most recent stable version through GitHub:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;thevaachandereng/bayesCT&quot;</span>)
+<span class="ot">FALSE</span> Downloading GitHub repo thevaachandereng<span class="op">/</span>bayesCT<span class="op">@</span>master
+<span class="ot">FALSE</span> 
+<span class="ot">FALSE</span>   
+   checking <span class="cf">for</span> file ‘<span class="op">/</span>private<span class="op">/</span>var<span class="op">/</span>folders<span class="op">/</span>sj<span class="op">/</span>qvf99_sx0ts6pzr_5rdx53dc0000gn<span class="op">/</span>T<span class="op">/</span>Rtmp1gzNLB<span class="op">/</span>remotese879305531a2<span class="op">/</span>thevaachandereng<span class="op">-</span>bayesCT<span class="op">-</span>23ae042<span class="op">/</span>DESCRIPTION’ ...
+  
+✔  checking <span class="cf">for</span> file ‘<span class="op">/</span>private<span class="op">/</span>var<span class="op">/</span>folders<span class="op">/</span>sj<span class="op">/</span>qvf99_sx0ts6pzr_5rdx53dc0000gn<span class="op">/</span>T<span class="op">/</span>Rtmp1gzNLB<span class="op">/</span>remotese879305531a2<span class="op">/</span>thevaachandereng<span class="op">-</span>bayesCT<span class="op">-</span>23ae042<span class="op">/</span>DESCRIPTION’ (373ms)
+<span class="ot">FALSE</span> 
+  
+─  preparing ‘bayesCT’<span class="op">:</span>
+<span class="ot">FALSE</span> 
+  
+   checking DESCRIPTION meta<span class="op">-</span>information ...
+  
+✔  checking DESCRIPTION meta<span class="op">-</span>information
+<span class="ot">FALSE</span> 
+  
+─  checking <span class="cf">for</span> LF line<span class="op">-</span>endings <span class="cf">in</span> source and make files and shell scripts
+<span class="ot">FALSE</span> 
+  
+─  checking <span class="cf">for</span> empty or unneeded directories
+<span class="ot">FALSE</span> 
+  
+─  looking to see <span class="cf">if</span> a ‘data<span class="op">/</span>datalist’ file should be added
+<span class="ot">FALSE</span> 
+  
+─  building ‘bayesCT_<span class="fl">0.99</span>.<span class="fl">0.</span>tar.gz’
+<span class="ot">FALSE</span> 
+  
+   
+<span class="ot">FALSE</span> 
+<span class="ot">FALSE</span> Installing package into <span class="st">'/private/var/folders/sj/qvf99_sx0ts6pzr_5rdx53dc0000gn/T/RtmpB6KioO/Rinste86631103d17'</span>
+<span class="ot">FALSE</span> (as <span class="st">'lib'</span> is unspecified)</code></pre></div>
+<p>After successful installation, the package must be loaded into the working space:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(bayesCT)
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Attaching package: 'bayesCT'</span>
+<span class="co">#&gt; The following object is masked from 'package:stats':</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     simulate</span></code></pre></div>
+</div>
+<div id="recruitment" class="section level1">
+<h1>Recruitment</h1>
+<p>An importance aspect of clinical trials is the rate at which subjects are recruited into the trial. In <code>bayesCT</code>, the subject recruitment rate is assumed to follow a Poisson process. We assume trial recruitment to be an independent process, thus the <a href="https://en.wikipedia.org/wiki/Memorylessness">“memoryless property”</a> modeling of subject recruitment is used. Since the subject recruitment rate can vary over time, we can account for differential rates over time. That is, we are not restricted to a homogeneous Poisson process.</p>
+<p>The <code>enrollment()</code> function is used to specify subject enrollment into the trial. The function assumes a piecewise stationary Poisson process. Using this processes gives the ability to specify different enrollment rates, i.e., the Poisson rates, at different time intervals. The first trial enrollment is assumed to occur at time zero.</p>
+<p>To illustrate, suppose we use a piecewise function to specify the change in enrollment rate over time: <span class="math display">\[  \lambda = \left\{
+\begin{array}{ll}
+      0.3 &amp; \text{time} \in [0, 5) \\
+      0.7 &amp; \text{time} \in [5, 10) \\
+      0.9 &amp; \text{time} \in [10, 15) \\
+      1.2 &amp; \text{time} \in [15, \infty) \\
+\end{array} 
+\right. \]</span></p>
+<p>Then, to simulate individual patient enrollment dates with a sample size (<code>N_total</code>) of 50, we use</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">enrollment</span>(<span class="dt">param =</span> <span class="kw">c</span>(<span class="fl">0.3</span>, <span class="fl">0.7</span>, <span class="fl">0.9</span>, <span class="fl">1.2</span>), <span class="dt">N_total =</span> <span class="dv">50</span>, <span class="dt">time =</span> <span class="kw">c</span>(<span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">15</span>))
+<span class="co">#&gt;  [1]  0  1  2  2 11 11 13 14 15 15 16 18 19 19 24 24 25 25 25 26 27 28 28</span>
+<span class="co">#&gt; [24] 29 29 29 29 30 31 33 34 36 37 37 39 40 40 45 46 46 47 48 48 52 52 52</span>
+<span class="co">#&gt; [47] 55 57 58 58</span></code></pre></div>
+</div>
+<div id="randomization-scheme" class="section level1">
+<h1>Randomization Scheme</h1>
+<p>Following recruitment, the desired randomization allocation of the trial subjects must be specified. Complete randomization may not always be ideal due to the chance of drawing a large block of a single treatment arm, potentially impacting the time to enrollment completion. Therefore, a block randomization allocation may be preferable.</p>
+<p>In <code>bayeCT</code>, the block randomization allocation specification allows for different randomization ratios, but they must be given in integer form. Additionally, the block size should be an integer that is divisible by the sum of the randomization allocation. For example,</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">randomization</span>(<span class="dt">N_total =</span> <span class="dv">140</span>, <span class="dt">block =</span> <span class="dv">7</span>, <span class="dt">allocation =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">1</span>))</code></pre></div>
+<p>will not work (and will return an error) because the sum of the allocation is not a multiple of the block, i.e., <span class="math inline">\(2+1=3\)</span> is not a multiple of <span class="math inline">\(7\)</span>. Changing the block size to 6 will work:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">randomization</span>(<span class="dt">N_total =</span> <span class="dv">140</span>, <span class="dt">block =</span> <span class="dv">6</span>, <span class="dt">allocation =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">1</span>))
+<span class="co">#&gt;   [1] 0 1 0 0 0 1 0 0 0 1 1 0 1 1 0 0 0 0 0 0 1 1 0 0 1 0 1 0 0 0 0 1 0 1 0</span>
+<span class="co">#&gt;  [36] 0 0 1 0 0 1 0 0 1 0 0 0 1 0 0 1 0 0 1 1 1 0 0 0 0 0 0 1 1 0 0 0 1 0 0</span>
+<span class="co">#&gt;  [71] 0 1 1 0 1 0 0 0 0 0 0 0 1 1 1 1 0 0 0 0 0 0 1 0 0 1 1 0 0 1 0 0 1 0 0</span>
+<span class="co">#&gt; [106] 0 1 0 0 0 1 0 1 0 0 0 0 1 1 0 0 0 0 1 1 0 0 0 0 1 0 1 0 0 1 0 0 1 0 0</span></code></pre></div>
+<p>In the code above, the total sample size is 140, the block size is 6 and the randomization ratio is 2:1 for control to treatment. Since <span class="math inline">\(2+1 = 3\)</span> is a multiple of the block size of 6, this allocation is valid.</p>
+<p>Complete randomization can be performed by setting the block size equal to the total sample size:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">randomization</span>(<span class="dt">N_total =</span> <span class="dv">120</span>, <span class="dt">block =</span> <span class="dv">120</span>, <span class="dt">allocation =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">1</span>))
+<span class="co">#&gt;   [1] 0 0 0 0 0 1 1 0 0 0 0 0 0 1 0 1 0 0 0 0 0 1 0 1 0 0 1 0 1 0 1 0 0 0 1</span>
+<span class="co">#&gt;  [36] 1 0 0 0 0 0 1 0 1 0 0 1 0 0 1 0 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 0</span>
+<span class="co">#&gt;  [71] 1 0 1 0 0 1 0 0 1 0 1 0 1 0 0 1 0 1 1 1 0 0 1 0 1 0 0 0 0 1 1 0 0 1 0</span>
+<span class="co">#&gt; [106] 1 0 0 1 0 1 0 0 1 0 1 0 0 0 0</span></code></pre></div>
+</div>
+<div id="incorporation-of-historical-data" class="section level1">
+<h1>Incorporation of Historical Data</h1>
+<p>The Bayesian attitude is to use all available data to address the scientific question under consideration. Most clinical trials are not conducted in a vacuum. Often, pilot studies are conducted in small sample sizes to obtain an estimate of parameters for a clinical trial, e.g., clinically relevant effect size, sample size determination, recruitment rates, etc. Besides pilot studies, the control and/or treatment are usually studied in early phase lab or bench settings. However, clinical trialists need to carefully consider the inclusion and exclusion criteria of historical data in a trial. The R package <code>bayesDP</code> is used as a computational engine for incorporating historical data into a trial design.</p>
+<p>The vignettes presented in the <code>bayesDP</code> package are a rich resource for unstanding the discount function approach and its implementation. Interested readers can refer to the vignettes avaialable at <a href="https://CRAN.R-project.org/package=bayesDP" class="uri">https://CRAN.R-project.org/package=bayesDP</a>.</p>
+</div>
+<div id="early-stopping-for-futility-or-success" class="section level1">
+<h1>Early Stopping for Futility or Success</h1>
+<p>With adaptive Bayesian trials, the trial can be stopped early for success or futility. In <code>bayesCT</code>, early success is achieved if the “probability of sucess” exceeds a pre-specified threshold. Likewise, futility occurs if the “probability of futility” is below a pre-specified threshold. In both cases, the probabilities are computed by imputing subjects that may be loss to follow-up or have not yet achieved the follow-up. However, final posterior estimation uses complete data only.</p>
+<div id="success" class="section level2">
+<h2>Success</h2>
+<p>The probability of stopping early for success is specified as</p>
+<p><span class="math display">\[Pr(\theta_T - \theta_C &gt; \delta| y, y_0) &gt; \Delta,\]</span></p>
+<p>where <span class="math inline">\(\theta_T\)</span> and <span class="math inline">\(\theta_C\)</span> are the posterior means of the treatment and control groups, respectively, <span class="math inline">\(\delta\)</span> is the difference margin (important in non-inferiority design), <span class="math inline">\(y\)</span> and <span class="math inline">\(y_0\)</span> are the current and historical data, respectively, and <span class="math inline">\(\Delta\)</span> is the specified success criteria. If this probability exceeds <span class="math inline">\(\Delta\)</span>, the trial will stop enrollment for early success. The default success probability is 0.90. If stopping early for success is not desired, the probability can be set to 1.</p>
+</div>
+<div id="futility" class="section level2">
+<h2>Futility</h2>
+<p>The probability of stopping for futility is specified as</p>
+<p><span class="math display">\[Pr(\theta_T - \theta_C &gt; \delta| y, y_0) &lt; \omega,\]</span></p>
+<p>where <span class="math inline">\(\omega\)</span> is the specified futility criteria. Now, if this probability is below <span class="math inline">\(\omega\)</span>, the trial will stop enrollment for futility. The default futility rate is set to 0.10. If stopping early for futility is not desired, the probability can be set to 0.</p>
+</div>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

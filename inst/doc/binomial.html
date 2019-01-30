@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Thevaa Chandereng, Donald Musgrove, Tarek Haddad, Graeme Hickey, Timothy Hanson, Theodore Lystig" />
+
+
+<title>Binomial Outcome</title>
+
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Binomial Outcome</h1>
+<h4 class="author"><em>Thevaa Chandereng, Donald Musgrove, Tarek Haddad, Graeme Hickey, Timothy Hanson, Theodore Lystig</em></h4>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#estimation-of-treatment-difference">Estimation of Treatment Difference</a></li>
+<li><a href="#wrapper-function-for-design-and-analysis">Wrapper Function for Design and Analysis</a></li>
+<li><a href="#design-of-adaptive-trials">Design of Adaptive Trials</a><ul>
+<li><a href="#one-arm-trial">One-arm Trial</a></li>
+<li><a href="#two-arm-trial">Two-arm trial</a></li>
+</ul></li>
+<li><a href="#analysis">Analysis</a></li>
+</ul>
+</div>
+
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>The purpose of this vignette is to introduce how to simulate and analyze an adaptive Bayesian clinical trial for binomial outcomes. The simulation section compromises the design of the trial itself which provides type I error rate and power at each interim look. We use the beta-binomial conjugate prior for the estimation of posterior probabilities. Available historical data can be used as an informative prior; we use the <code>bayesDP</code> package as the engine for incorporating the historical data. By default, the model uses a non-informative prior of <span class="math inline">\(Beta(a = 1, b = 1)\)</span> with or without the incorporation of historical data. Instead of using traditional R function, we use pipes to input our parameters.</p>
+</div>
+<div id="estimation-of-treatment-difference" class="section level1">
+<h1>Estimation of Treatment Difference</h1>
+<p>Let <span class="math inline">\(y\)</span> and <span class="math inline">\(N\)</span> denote the number of events and the sample size, respectively. Let <span class="math inline">\(a_0\)</span> and <span class="math inline">\(b_0\)</span> denote the rate parameters of a Beta distribution. Then, the posterior distribution of the event rate under vague (flat) priors is</p>
+<p><span class="math display">\[ \tilde{\theta}\mid y,N \; \sim \;  \mathcal{B}eta\left(y+a_0,\,N-y+b_0 \right).\]</span> When historical data is present, <span class="math inline">\(y_0\)</span> and <span class="math inline">\(N_0\)</span> denote the number of events and sample size of the historical data. The weight of the historical data included in the study design and analysis is denoted by <span class="math inline">\(\hat\alpha\)</span>. For more details on the computation of <span class="math inline">\(\hat{\alpha}\)</span>, please refer to the vignette of binomial counts avaialable at <a href="https://CRAN.R-project.org/package=bayesDP" class="uri">https://CRAN.R-project.org/package=bayesDP</a>. The posterior distribution of the event rate with historical data incorporated under vague (flat) priors is</p>
+<p><span class="math display">\[\tilde{\theta} \mid y,N, y_0, N_0 \; \sim \; \mathcal{B}eta\left(y+y_0\hat{\alpha}+a_0,\, N-y+\hat{\alpha}(N_0-y_0)+b_0 \right),\]</span> Since there is no closed-form solution for the difference in beta distributed random variables, we use Monte Carlo simulations to estimate the posterior of the treatment difference.</p>
+<p>The estimation of the difference in proportions is <span class="math inline">\(\tilde{\theta_T} - \tilde{\theta_C}\)</span>, where <span class="math inline">\(\theta_T\)</span> is the posterior of the event rates in the treatment group and <span class="math inline">\(\theta_C\)</span> is the posterior of the event rates in the control group.</p>
+<p>The following section lays out each of the functions and inputs for carrying out simulations and analyses of Bayesian adaptive trials.</p>
+</div>
+<div id="wrapper-function-for-design-and-analysis" class="section level1">
+<h1>Wrapper Function for Design and Analysis</h1>
+<p>Unlike traditional R functions, the <code>bayesCT</code> package depends on pipe inputs with different wrapper functions. All the wrapper functions are illustrated below along with details on the arguments for the simulation and analysis.</p>
+<ul>
+<li><strong>binomial_outcome</strong> - wrapper function for specifying event rates. Inputs:
+<ul>
+<li><strong>p_treatment</strong> - required input; proportion of events for a single-arm or double-arm trials for the treatment arm, where <span class="math inline">\(0 &lt; p_{treatment} &lt; 1\)</span>.</li>
+<li><strong>p_control</strong> - NULL as default for single-arm trials; for two-arm trials <strong>p_control</strong> specifies the proportion of events for the control arm, where <span class="math inline">\(0 &lt; p_{control} &lt; 1\)</span>.</li>
+</ul></li>
+<li><strong>study_details</strong> - wrapper function for specifying sample size, study length, interim looks, and loss to follow-up. Inputs:
+<ul>
+<li><strong>total_sample_size</strong> - sample size required to run the simulation</li>
+<li><strong>study_period</strong> - length of the study, i.e., the follow-up period</li>
+<li><strong>interim_look</strong> - enrollment values where interim looks are carried out. Specify where the trials are stopped to check for early success or futility. For more details on the early stopping for futility or success, please see <a href="https://thevaachandereng.github.io/bayesCT/articles/bayesCT.html#early-stopping-for-futility-or-success" class="uri">https://thevaachandereng.github.io/bayesCT/articles/bayesCT.html#early-stopping-for-futility-or-success</a>. Each <code>interim_look</code> value must be smaller than <code>total_sample_size</code>.</li>
+<li><strong>prop_loss_to_followup</strong> - proportion of subjects loss to follow-up. Must be a value be 0 and 1. Default value is 0.10.</li>
+</ul></li>
+<li><strong>enrollment_rate</strong> - wrapper function for specifying enrollment. Inputs:
+<ul>
+<li><strong>lambda</strong> - enrollment rate(s) at each <code>time</code>. Specified as patients per day. Can be a scalar or vector. Default is 0.3, i.e. 0.3 patients per day.</li>
+<li><strong>time</strong> - determines the cut-off for the enrollment rates. Can be NULL, a scalar, or a vector. Default is NULL. For more details, please see <a href="https://thevaachandereng.github.io/bayesCT/articles/bayesCT.html#recruitment" class="uri">https://thevaachandereng.github.io/bayesCT/articles/bayesCT.html#recruitment</a>.</li>
+</ul></li>
+<li><strong>hypothesis</strong> - wrapper function for both simulation and analysis. Inputs:
+<ul>
+<li><strong>delta</strong> - threshold difference between treatment and control groups or the threshold for single-arm trial (the default is set to 0). For non-inferiority trials, the difference must be &lt; 0.<br />
+</li>
+<li><strong>prob_accept_ha</strong> - probability of accepting alternative hypothesis. Default value is 0.95.</li>
+<li><strong>futility_prob</strong> - futility rate, i.e., <span class="math inline">\(\omega\)</span> in <a href="https://thevaachandereng.github.io/bayesCT/articles/bayesCT.html#futility" class="uri">https://thevaachandereng.github.io/bayesCT/articles/bayesCT.html#futility</a>. The default is set to 0.10. To prevent the trial for stopping for futility, set the <strong>futility_prob</strong> to 0.</li>
+<li><strong>expected_success_prob</strong> - controls stopping early for success rate, i.e., <span class="math inline">\(\Delta\)</span> in <a href="https://thevaachandereng.github.io/bayesCT/articles/bayesCT.html#success" class="uri">https://thevaachandereng.github.io/bayesCT/articles/bayesCT.html#success</a>](<a href="https://thevaachandereng.github.io/bayesCT/articles/bayesCT.html#success" class="uri">https://thevaachandereng.github.io/bayesCT/articles/bayesCT.html#success</a>). The default value is 0.90. To prevent the trial for stopping for early success, use 1.</li>
+<li><strong>alternative</strong> - sign of the alternative hypothesis. Character string specifying one of “greater” <span class="math inline">\(p_{treatment} &gt; p_{control}\)</span> (default), “less” <span class="math inline">\(p_{treatment} &lt; p_{control}\)</span> or “two-sided” <span class="math inline">\(p_{treatment} \neq p_{control}\)</span>.</li>
+</ul></li>
+<li><strong>randomize</strong> - wrapper function for specifying the randomization scheme. Inputs:
+<ul>
+<li><strong>block_size</strong> - size of each enrollment block.</li>
+<li><strong>randomization_ratio</strong> - ratio of control to treatment, specified as a vector of length 2. For more details, see <a href="https://thevaachandereng.github.io/bayesCT/articles/bayesCT.html#randomization-scheme" class="uri">https://thevaachandereng.github.io/bayesCT/articles/bayesCT.html#randomization-scheme</a>.</li>
+</ul></li>
+<li><strong>impute</strong> - wrapper function specifying imputation of outcomes at the interim looks. Inputs:
+<ul>
+<li><strong>no_of_impute</strong> - number of imputations. Used to impute outcomes for subjects potentially loss to follow-up when estimating the probability of stopping for early success and/or futility. In the case of the futility calculation, subjects not yet enrolled or imputed as well. Default value is 10 so that the vignette can be generated quickly. However, much larger values should be used in practice, e.g., 10000.</li>
+<li><strong>number_mcmc</strong> - number of Monte Carlo iterations for sampling from posterior distributions during imputation. Default value is 10000.</li>
+</ul></li>
+<li><strong>beta_prior</strong> - wrapper function for specifying the non-informative prior. Inputs:
+<ul>
+<li><strong>a_0</strong> - shape value of the beta distribution. Default is 1. To completely avoid using a non-informative prior, users can set this value to 0.</li>
+<li><strong>b_0</strong> - shape value of the beta distribution. Default is 1. To completely avoid using a non-informative prior, users can set this value to 0.</li>
+</ul></li>
+<li><strong>historical_binomial</strong> - wrapper function for specifying historical data, if available. This function should only be used when historical data is incorporated in the analysis or simulation. For more details on the method and computation, please see <a href="https://CRAN.R-project.org/package=bayesDP" class="uri">https://CRAN.R-project.org/package=bayesDP</a>. Inputs:
+<ul>
+<li><strong>y0_treatment</strong> - number of events in the historical treatment group.</li>
+<li><strong>N0_treatment</strong> - sample size for the historical treatment group.</li>
+<li><strong>y0_control</strong> - number of events in the historical control group.</li>
+<li><strong>N0_control</strong> - sample size for the historical control group.</li>
+<li><strong>discount_function</strong> - discount function to use for controlling the weight given to the historical data. Currently supports <code>weibull</code>, <code>scaledweibull</code>, and <code>identity</code>. The discount function <code>scaledweibull</code> scales the output of the Weibull CDF to have a max value of 1. The <code>identity</code> discount function uses the posterior probability directly as the discount weight. Default value is <code>&quot;identity&quot;</code>.</li>
+<li><strong>alpha_max</strong> - maximum weight the discount function can apply. Default is 1. For a two-arm trial, users may specify a vector of two values where the first value is used to weight the historical treatment group and the second value is used to weight the historical control group.</li>
+<li><strong>fix_alpha</strong> - Should alpha be set to alpha_max? Default value is FALSE.</li>
+<li><strong>weibull_scale</strong> - scale parameter of the Weibull discount function used to compute alpha, the weight parameter of the historical data. Default value is 0.135. For a two-arm trial, users may specify a vector of two values where the first value is used to estimate the weight of the historical treatment group and the second value is used to estimate the weight of the historical control group. Not used when <code>discount_function = &quot;identity&quot;</code>.</li>
+<li><strong>weibull_shape</strong> - shape parameter of the Weibull discount function used to compute alpha, the weight parameter of the historical data. Default value is 3. For a two-arm trial, users may specify a vector of two values where the first value is used to estimate the weight of the historical treatment group and the second value is used to estimate the weight of the historical control group. Not used when <code>discount_function = &quot;identity&quot;</code>.</li>
+</ul></li>
+<li><strong>data_binomial</strong> - wrapper function for inputting data with a binomial outcome. Inputs:
+<ul>
+<li><strong>treatment</strong> - assignment for patients in the trial, 1 for treatment group and 0 for control group. Input should be a vector.</li>
+<li><strong>outcome</strong> - outcome of the trial, 1 for response (success or failure), 0 for no response. Input should be a vector with same lenggth as <strong>treatment</strong>.</li>
+<li><strong>complete</strong> - indicator for whether outcome is observed; 1 for complete outcome, 0 for loss to follow up or not yet observed. If a value is 0, the outcome of the patient is ignored. If not provided, the dataset is assumed to be complete.</li>
+</ul></li>
+<li><strong>analysis</strong> - wrapper function for analyzing a trial. Inputs:
+<ul>
+<li><strong>input</strong> - list of input to analyze the adaptive trial.</li>
+<li><strong>type</strong> - outcome type of the trial. Use <code>type=&quot;binomial&quot;</code> for a trial with binomial outcome.</li>
+</ul></li>
+<li><strong>simulate</strong> - wrapper function for simulating trials. Should be used as the terminal end of the pipe. Inputs:
+<ul>
+<li><strong>input</strong> - list of inputs specifying the adaptive trial simulation set-up.</li>
+<li><strong>no_of_sim</strong> - number of trials to simulate. Default value is 10000.</li>
+</ul></li>
+</ul>
+</div>
+<div id="design-of-adaptive-trials" class="section level1">
+<h1>Design of Adaptive Trials</h1>
+<p>In the following section, we will discuss the design of adaptive trials using <code>bayesCT</code> for binomial outcomes. We illustrate an example for one-arm trial and two-arm trials using the wrapper functions described above.</p>
+<div id="one-arm-trial" class="section level2">
+<h2>One-arm Trial</h2>
+<p>In the example below, we will illustrate how to compute power, type 1 error, and other characteristics for an objective performace criterion (OPC) trial with an observed proportion of events and hypothesis described as follows, <span class="math display">\[H_0: \theta_{treatment} \geq 0.08 \qquad H_A:\theta_{treatment} &lt; 0.08.\]</span></p>
+<p>The most important wrapper functions are <strong>study_details</strong> and <strong>binomial_outcome</strong> (especially since there are no default values).</p>
+<p>Binomial events are simulated using an event rate of 0.08. The total sample size is 900 with a study length of 50 days. A 10% loss to follow-up ais assumed. Based on this information, the adaptive trials are simulated 10 times to obtain the following output (<strong>NOTE</strong>: for the purpose of reproducing the vignette quickly, we reduce the number of simulations to 10, you should use a much larger value, e.g., 10000). The aforementioned inputs were chosen for illustration purposes only.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">value &lt;-<span class="st"> </span><span class="kw">binomial_outcome</span>(<span class="dt">p_treatment =</span> <span class="fl">0.08</span>) <span class="op">%&gt;%</span>
+<span class="st">   </span><span class="kw">study_details</span>(<span class="dt">total_sample_size     =</span> <span class="dv">900</span>, 
+                 <span class="dt">study_period          =</span> <span class="dv">50</span>,
+                 <span class="dt">interim_look          =</span> <span class="ot">NULL</span>,
+                 <span class="dt">prop_loss_to_followup =</span> <span class="fl">0.10</span>)
+
+<span class="co"># Simulate 10 trials</span>
+output &lt;-<span class="st"> </span>value <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">simulate</span>(<span class="dt">no_of_sim =</span> <span class="dv">10</span>)
+
+<span class="co"># Structure of the simulation output</span>
+<span class="kw">str</span>(output)
+<span class="co">#&gt; List of 8</span>
+<span class="co">#&gt;  $ input                       :List of 4</span>
+<span class="co">#&gt;   ..$ p_treatment          : num 0.08</span>
+<span class="co">#&gt;   ..$ N_total              : num 900</span>
+<span class="co">#&gt;   ..$ EndofStudy           : num 50</span>
+<span class="co">#&gt;   ..$ prop_loss_to_followup: num 0.1</span>
+<span class="co">#&gt;  $ power                       :'data.frame':    1 obs. of  2 variables:</span>
+<span class="co">#&gt;   ..$ interim_looks: num 900</span>
+<span class="co">#&gt;   ..$ power        : num 0</span>
+<span class="co">#&gt;  $ type1_error                 : num 0.1</span>
+<span class="co">#&gt;  $ est_final                   : num [1:10] 0.0813 0.0863 0.0801 0.0875 0.0838 ...</span>
+<span class="co">#&gt;  $ post_prob_accept_alternative: num [1:10] 0.542 0.727 0.491 0.768 0.64 ...</span>
+<span class="co">#&gt;  $ N_enrolled                  : num [1:10] 900 900 900 900 900 900 900 900 900 900</span>
+<span class="co">#&gt;  $ stop_expect_success         : num [1:10] 0 0 0 0 0 0 0 0 0 0</span>
+<span class="co">#&gt;  $ stop_futility               : num [1:10] 0 0 0 0 0 0 0 0 0 0</span></code></pre></div>
+<p>To allow for early stopping for success or futility, we can add interim looks to the design. We’ll check for success or futility at the enrollment of the 600th, 700th and 800th subject. Upon adding this interim look requirement, the trial is simulated 10 times to obtain the output.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Adding interim looks</span>
+value &lt;-<span class="st"> </span>value <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">study_details</span>(<span class="dt">total_sample_size     =</span> <span class="dv">900</span>, 
+                <span class="dt">study_period          =</span> <span class="dv">50</span>,
+                <span class="dt">interim_look          =</span> <span class="kw">c</span>(<span class="dv">600</span>, <span class="dv">700</span>, <span class="dv">800</span>),
+                <span class="dt">prop_loss_to_followup =</span> <span class="fl">0.10</span>)
+
+<span class="co"># Simulate 10 trials</span>
+output &lt;-<span class="st"> </span>value <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">simulate</span>(<span class="dt">no_of_sim =</span> <span class="dv">10</span>)
+
+<span class="co"># Structure of the simulation output</span>
+<span class="kw">str</span>(output)
+<span class="co">#&gt; List of 8</span>
+<span class="co">#&gt;  $ input                       :List of 5</span>
+<span class="co">#&gt;   ..$ p_treatment          : num 0.08</span>
+<span class="co">#&gt;   ..$ N_total              : num 900</span>
+<span class="co">#&gt;   ..$ EndofStudy           : num 50</span>
+<span class="co">#&gt;   ..$ prop_loss_to_followup: num 0.1</span>
+<span class="co">#&gt;   ..$ interim_look         : num [1:3] 600 700 800</span>
+<span class="co">#&gt;  $ power                       :'data.frame':    4 obs. of  2 variables:</span>
+<span class="co">#&gt;   ..$ interim_looks: num [1:4] 600 700 800 900</span>
+<span class="co">#&gt;   ..$ power        : num [1:4] 0 0 0 0</span>
+<span class="co">#&gt;  $ type1_error                 : num 0.1</span>
+<span class="co">#&gt;  $ est_final                   : num [1:10] 0.0817 0.0767 0.0799 0.0879 0.0936 ...</span>
+<span class="co">#&gt;  $ post_prob_accept_alternative: num [1:10] 0.541 0.367 0.477 0.752 0.911 ...</span>
+<span class="co">#&gt;  $ N_enrolled                  : num [1:10] 600 600 600 700 900 600 800 800 600 600</span>
+<span class="co">#&gt;  $ stop_expect_success         : num [1:10] 0 0 0 0 0 0 0 0 0 0</span>
+<span class="co">#&gt;  $ stop_futility               : num [1:10] 1 1 1 1 0 1 1 1 1 1</span></code></pre></div>
+<p>Patient enrollment is assumed to follow a Poisson process. The default enrollment rate is 0.3 patients per day. In this simulation we’ll introduce a step-wise Poisson process with rate <span class="math inline">\(\lambda\)</span> as follows:</p>
+<p><span class="math display">\[  \lambda = \left\{
+\begin{array}{ll}
+      0.3 &amp; \text(time) \in [0, 25) \\
+      1 &amp; \text(time) \in [25, \infty) \\
+\end{array} 
+\right. \]</span></p>
+<p>This enrollment scheme is illustrated below.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">value &lt;-<span class="st"> </span>value <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">enrollment_rate</span>(<span class="dt">lambda =</span> <span class="kw">c</span>(<span class="fl">0.3</span>, <span class="dv">1</span>), 
+                  <span class="dt">time   =</span> <span class="dv">25</span>)
+
+output &lt;-<span class="st"> </span>value <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">simulate</span>(<span class="dt">no_of_sim =</span> <span class="dv">10</span>)
+
+<span class="kw">str</span>(output)
+<span class="co">#&gt; List of 8</span>
+<span class="co">#&gt;  $ input                       :List of 7</span>
+<span class="co">#&gt;   ..$ p_treatment          : num 0.08</span>
+<span class="co">#&gt;   ..$ N_total              : num 900</span>
+<span class="co">#&gt;   ..$ EndofStudy           : num 50</span>
+<span class="co">#&gt;   ..$ prop_loss_to_followup: num 0.1</span>
+<span class="co">#&gt;   ..$ interim_look         : num [1:3] 600 700 800</span>
+<span class="co">#&gt;   ..$ lambda               : num [1:2] 0.3 1</span>
+<span class="co">#&gt;   ..$ lambda_time          : num 25</span>
+<span class="co">#&gt;  $ power                       :'data.frame':    4 obs. of  2 variables:</span>
+<span class="co">#&gt;   ..$ interim_looks: num [1:4] 600 700 800 900</span>
+<span class="co">#&gt;   ..$ power        : num [1:4] 0 0 0 0</span>
+<span class="co">#&gt;  $ type1_error                 : num 0</span>
+<span class="co">#&gt;  $ est_final                   : num [1:10] 0.0514 0.0748 0.0886 0.0904 0.094 ...</span>
+<span class="co">#&gt;  $ post_prob_accept_alternative: num [1:10] 0.0034 0.3021 0.7868 0.7969 0.8724 ...</span>
+<span class="co">#&gt;  $ N_enrolled                  : num [1:10] 600 700 800 600 600 600 600 600 600 600</span>
+<span class="co">#&gt;  $ stop_expect_success         : num [1:10] 0 0 0 0 0 0 0 0 0 0</span>
+<span class="co">#&gt;  $ stop_futility               : num [1:10] 1 1 1 1 1 1 1 1 1 1</span></code></pre></div>
+<p>The hypothesis is an important wrapper function which controls the probability of futility, probability of accepting the alternative hypothesis, probablity of early success, the alternative hypothesis, and the treatment difference margin.</p>
+<p>Since, in an OPC trial, the proportion of events in the treatment group are simulated using the input provided, <code>delta</code> controls the maximum threshold allowed for the trial to succeed/fail. The default value of <code>delta</code> is 0. Here, we’ll use <code>delta = -0.03</code> (i.e <span class="math inline">\(\hat\theta_{treatment} - 0.08 &gt; -0.03\)</span>).</p>
+<p>We’ll further set the futility probability to 0.05, the expected success probability for early stopping to 0.90, and the final probability of accepting the alternative to 0.95. The alternative is <code>&quot;less&quot;</code> due to the hypothesis function specified above.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">value &lt;-<span class="st"> </span>value <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">hypothesis</span>(<span class="dt">delta                 =</span> <span class="op">-</span><span class="fl">0.03</span>, 
+             <span class="dt">futility_prob         =</span> <span class="fl">0.05</span>, 
+             <span class="dt">prob_accept_ha        =</span> <span class="fl">0.95</span>,
+             <span class="dt">expected_success_prob =</span> <span class="fl">0.90</span>, 
+             <span class="dt">alternative           =</span> <span class="st">&quot;less&quot;</span>)
+
+output &lt;-<span class="st"> </span>value <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">simulate</span>(<span class="dt">no_of_sim =</span> <span class="dv">10</span>)
+
+<span class="kw">str</span>(output)
+<span class="co">#&gt; List of 8</span>
+<span class="co">#&gt;  $ input                       :List of 12</span>
+<span class="co">#&gt;   ..$ p_treatment          : num 0.08</span>
+<span class="co">#&gt;   ..$ N_total              : num 900</span>
+<span class="co">#&gt;   ..$ EndofStudy           : num 50</span>
+<span class="co">#&gt;   ..$ prop_loss_to_followup: num 0.1</span>
+<span class="co">#&gt;   ..$ interim_look         : num [1:3] 600 700 800</span>
+<span class="co">#&gt;   ..$ lambda               : num [1:2] 0.3 1</span>
+<span class="co">#&gt;   ..$ lambda_time          : num 25</span>
+<span class="co">#&gt;   ..$ h0                   : num -0.03</span>
+<span class="co">#&gt;   ..$ futility_prob        : num 0.05</span>
+<span class="co">#&gt;   ..$ prob_ha              : num 0.95</span>
+<span class="co">#&gt;   ..$ expected_success_prob: num 0.9</span>
+<span class="co">#&gt;   ..$ alternative          : chr &quot;less&quot;</span>
+<span class="co">#&gt;  $ power                       :'data.frame':    4 obs. of  2 variables:</span>
+<span class="co">#&gt;   ..$ interim_looks: num [1:4] 600 700 800 900</span>
+<span class="co">#&gt;   ..$ power        : num [1:4] 0.6 0.7 0.9 0.9</span>
+<span class="co">#&gt;  $ type1_error                 : num 0</span>
+<span class="co">#&gt;  $ est_final                   : num [1:10] 0.0863 0.0757 0.0801 0.0706 0.0881 ...</span>
+<span class="co">#&gt;  $ post_prob_accept_alternative: num [1:10] 0.983 0.997 0.992 0.999 0.967 ...</span>
+<span class="co">#&gt;  $ N_enrolled                  : num [1:10] 800 600 600 600 700 800 600 900 600 600</span>
+<span class="co">#&gt;  $ stop_expect_success         : num [1:10] 1 1 1 1 1 1 1 0 1 1</span>
+<span class="co">#&gt;  $ stop_futility               : num [1:10] 0 0 0 0 0 0 0 0 0 0</span></code></pre></div>
+<p>Next, we’ll illustrate imputations for imputing outcomes for subjects loss to follow up. We’ll carry out 25 imputations and draw 1000 values from the posterior of each imputation.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">value &lt;-<span class="st"> </span>value <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">impute</span>(<span class="dt">no_of_impute =</span> <span class="dv">25</span>, 
+         <span class="dt">number_mcmc  =</span> <span class="dv">1000</span>)
+
+output &lt;-<span class="st"> </span>value <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">simulate</span>(<span class="dt">no_of_sim =</span> <span class="dv">10</span>)
+
+<span class="kw">str</span>(output)
+<span class="co">#&gt; List of 8</span>
+<span class="co">#&gt;  $ input                       :List of 14</span>
+<span class="co">#&gt;   ..$ p_treatment          : num 0.08</span>
+<span class="co">#&gt;   ..$ N_total              : num 900</span>
+<span class="co">#&gt;   ..$ EndofStudy           : num 50</span>
+<span class="co">#&gt;   ..$ prop_loss_to_followup: num 0.1</span>
+<span class="co">#&gt;   ..$ interim_look         : num [1:3] 600 700 800</span>
+<span class="co">#&gt;   ..$ lambda               : num [1:2] 0.3 1</span>
+<span class="co">#&gt;   ..$ lambda_time          : num 25</span>
+<span class="co">#&gt;   ..$ h0                   : num -0.03</span>
+<span class="co">#&gt;   ..$ futility_prob        : num 0.05</span>
+<span class="co">#&gt;   ..$ prob_ha              : num 0.95</span>
+<span class="co">#&gt;   ..$ expected_success_prob: num 0.9</span>
+<span class="co">#&gt;   ..$ alternative          : chr &quot;less&quot;</span>
+<span class="co">#&gt;   ..$ N_impute             : num 25</span>
+<span class="co">#&gt;   ..$ number_mcmc          : num 1000</span>
+<span class="co">#&gt;  $ power                       :'data.frame':    4 obs. of  2 variables:</span>
+<span class="co">#&gt;   ..$ interim_looks: num [1:4] 600 700 800 900</span>
+<span class="co">#&gt;   ..$ power        : num [1:4] 0.3 0.4 0.7 0.9</span>
+<span class="co">#&gt;  $ type1_error                 : num 0</span>
+<span class="co">#&gt;  $ est_final                   : num [1:10] 0.091 0.0938 0.0886 0.0809 0.0776 ...</span>
+<span class="co">#&gt;  $ post_prob_accept_alternative: num [1:10] 0.965 0.94 0.971 0.997 0.997 0.982 0.993 0.996 1 0.985</span>
+<span class="co">#&gt;  $ N_enrolled                  : num [1:10] 900 900 900 800 800 600 600 800 600 700</span>
+<span class="co">#&gt;  $ stop_expect_success         : num [1:10] 0 0 0 1 1 1 1 1 1 1</span>
+<span class="co">#&gt;  $ stop_futility               : num [1:10] 0 0 0 0 0 0 0 0 0 0</span></code></pre></div>
+<p>The default non-informative beta prior used in the simulation is <span class="math inline">\(\mathcal{B}eta(1, 1)\)</span>. In our OPC trial simulation, we’ll change the default to <span class="math inline">\(\mathcal{B}eta(5,5)\)</span>. This will increase the weight of the non-informative prior in the simulation. This non-informative beta prior is implemented using beta_prior wrapper function.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">value &lt;-<span class="st"> </span>value <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">beta_prior</span>(<span class="dt">a0 =</span> <span class="dv">5</span>, 
+             <span class="dt">b0 =</span> <span class="dv">5</span>)
+
+output &lt;-<span class="st"> </span>value <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">simulate</span>(<span class="dt">no_of_sim =</span> <span class="dv">10</span>)
+
+<span class="kw">str</span>(output)
+<span class="co">#&gt; List of 8</span>
+<span class="co">#&gt;  $ input                       :List of 15</span>
+<span class="co">#&gt;   ..$ p_treatment          : num 0.08</span>
+<span class="co">#&gt;   ..$ N_total              : num 900</span>
+<span class="co">#&gt;   ..$ EndofStudy           : num 50</span>
+<span class="co">#&gt;   ..$ prop_loss_to_followup: num 0.1</span>
+<span class="co">#&gt;   ..$ interim_look         : num [1:3] 600 700 800</span>
+<span class="co">#&gt;   ..$ lambda               : num [1:2] 0.3 1</span>
+<span class="co">#&gt;   ..$ lambda_time          : num 25</span>
+<span class="co">#&gt;   ..$ h0                   : num -0.03</span>
+<span class="co">#&gt;   ..$ futility_prob        : num 0.05</span>
+<span class="co">#&gt;   ..$ prob_ha              : num 0.95</span>
+<span class="co">#&gt;   ..$ expected_success_prob: num 0.9</span>
+<span class="co">#&gt;   ..$ alternative          : chr &quot;less&quot;</span>
+<span class="co">#&gt;   ..$ N_impute             : num 25</span>
+<span class="co">#&gt;   ..$ number_mcmc          : num 1000</span>
+<span class="co">#&gt;   ..$ prior                : num [1:2] 5 5</span>
+<span class="co">#&gt;  $ power                       :'data.frame':    4 obs. of  2 variables:</span>
+<span class="co">#&gt;   ..$ interim_looks: num [1:4] 600 700 800 900</span>
+<span class="co">#&gt;   ..$ power        : num [1:4] 0.4 0.7 0.8 0.9</span>
+<span class="co">#&gt;  $ type1_error                 : num 0</span>
+<span class="co">#&gt;  $ est_final                   : num [1:10] 0.0719 0.0976 0.0794 0.0922 0.0829 ...</span>
+<span class="co">#&gt;  $ post_prob_accept_alternative: num [1:10] 1 0.881 0.999 0.958 0.985 1 0.992 0.968 0.987 0.993</span>
+<span class="co">#&gt;  $ N_enrolled                  : num [1:10] 600 900 700 900 700 600 800 600 600 700</span>
+<span class="co">#&gt;  $ stop_expect_success         : num [1:10] 1 0 1 0 1 1 1 1 1 1</span>
+<span class="co">#&gt;  $ stop_futility               : num [1:10] 0 0 0 0 0 0 0 0 0 0</span></code></pre></div>
+<p>Historical data is not required to compute the simulation. However, if historical data is avaialble, it can be incorporated into the analysis using the discount prior approach as implemented in the <code>bayesDP</code> R packageg.</p>
+<p>In our OPC trial, we’ll illustrate historical data incorporation. We’ll assume that the historical data had 5 events in 55 subjects. We’ll incorporate this historical data using the identity discount function.</p>
+<p>For more details on the historical data incorporation method and computation, please see <a href="https://CRAN.R-project.org/package=bayesDP" class="uri">https://CRAN.R-project.org/package=bayesDP</a>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">value &lt;-<span class="st"> </span>value <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">historical_binomial</span>(<span class="dt">y0_treatment      =</span> <span class="dv">5</span>, 
+                      <span class="dt">N0_treatment      =</span> <span class="dv">55</span>,
+                      <span class="dt">discount_function =</span> <span class="st">&quot;identity&quot;</span>,
+                      <span class="dt">y0_control        =</span> <span class="ot">NULL</span>, 
+                      <span class="dt">N0_control        =</span> <span class="ot">NULL</span>,
+                      <span class="dt">alpha_max         =</span> <span class="dv">1</span>, 
+                      <span class="dt">fix_alpha         =</span> <span class="ot">FALSE</span>,
+                      <span class="dt">weibull_scale     =</span> <span class="fl">0.135</span>, 
+                      <span class="dt">weibull_shape     =</span> <span class="dv">3</span>)
+
+output &lt;-<span class="st"> </span>value <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">simulate</span>(<span class="dt">no_of_sim =</span> <span class="dv">10</span>)
+
+<span class="kw">str</span>(output)
+<span class="co">#&gt; List of 8</span>
+<span class="co">#&gt;  $ input                       :List of 22</span>
+<span class="co">#&gt;   ..$ p_treatment          : num 0.08</span>
+<span class="co">#&gt;   ..$ N_total              : num 900</span>
+<span class="co">#&gt;   ..$ EndofStudy           : num 50</span>
+<span class="co">#&gt;   ..$ prop_loss_to_followup: num 0.1</span>
+<span class="co">#&gt;   ..$ interim_look         : num [1:3] 600 700 800</span>
+<span class="co">#&gt;   ..$ lambda               : num [1:2] 0.3 1</span>
+<span class="co">#&gt;   ..$ lambda_time          : num 25</span>
+<span class="co">#&gt;   ..$ h0                   : num -0.03</span>
+<span class="co">#&gt;   ..$ futility_prob        : num 0.05</span>
+<span class="co">#&gt;   ..$ prob_ha              : num 0.95</span>
+<span class="co">#&gt;   ..$ expected_success_prob: num 0.9</span>
+<span class="co">#&gt;   ..$ alternative          : chr &quot;less&quot;</span>
+<span class="co">#&gt;   ..$ N_impute             : num 25</span>
+<span class="co">#&gt;   ..$ number_mcmc          : num 1000</span>
+<span class="co">#&gt;   ..$ prior                : num [1:2] 5 5</span>
+<span class="co">#&gt;   ..$ y0_treatment         : num 5</span>
+<span class="co">#&gt;   ..$ N0_treatment         : num 55</span>
+<span class="co">#&gt;   ..$ discount_function    : chr &quot;identity&quot;</span>
+<span class="co">#&gt;   ..$ alpha_max            : num 1</span>
+<span class="co">#&gt;   ..$ fix_alpha            : logi FALSE</span>
+<span class="co">#&gt;   ..$ weibull_scale        : num 0.135</span>
+<span class="co">#&gt;   ..$ weibull_shape        : num 3</span>
+<span class="co">#&gt;  $ power                       :'data.frame':    4 obs. of  2 variables:</span>
+<span class="co">#&gt;   ..$ interim_looks: num [1:4] 600 700 800 900</span>
+<span class="co">#&gt;   ..$ power        : num [1:4] 0.5 0.6 0.6 0.7</span>
+<span class="co">#&gt;  $ type1_error                 : num 0</span>
+<span class="co">#&gt;  $ est_final                   : num [1:10] 0.087 0.0852 0.0773 0.0917 0.0747 ...</span>
+<span class="co">#&gt;  $ post_prob_accept_alternative: num [1:10] 0.966 0.979 0.999 0.966 0.996 0.984 0.897 0.997 0.873 0.68</span>
+<span class="co">#&gt;  $ N_enrolled                  : num [1:10] 700 600 600 900 600 600 600 600 900 900</span>
+<span class="co">#&gt;  $ stop_expect_success         : num [1:10] 1 1 1 0 1 1 1 1 0 0</span>
+<span class="co">#&gt;  $ stop_futility               : num [1:10] 0 0 0 0 0 0 0 0 0 0</span></code></pre></div>
+<p>The above flow was for illustrative purposes. Instead of inputting parameters step by step, the trial parameters can be filled in all at once as illustrated below. The pipe function connects all inputs together and the trial is simulated 10 times to obtain results.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">value &lt;-<span class="st"> </span><span class="kw">binomial_outcome</span>(<span class="dt">p_treatment =</span> <span class="fl">0.08</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">enrollment_rate</span>(<span class="dt">lambda =</span> <span class="kw">c</span>(<span class="fl">0.3</span>, <span class="dv">1</span>), 
+                  <span class="dt">time   =</span> <span class="dv">25</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">study_details</span>(<span class="dt">total_sample_size     =</span> <span class="dv">900</span>, 
+                <span class="dt">study_period          =</span> <span class="dv">50</span>,
+                <span class="dt">interim_look          =</span> <span class="kw">c</span>(<span class="dv">600</span>, <span class="dv">700</span>, <span class="dv">800</span>),
+                <span class="dt">prop_loss_to_followup =</span> <span class="fl">0.10</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">hypothesis</span>(<span class="dt">delta                 =</span> <span class="op">-</span><span class="fl">0.03</span>, 
+             <span class="dt">futility_prob         =</span> <span class="fl">0.05</span>, 
+             <span class="dt">prob_accept_ha        =</span> <span class="fl">0.95</span>,
+             <span class="dt">expected_success_prob =</span> <span class="fl">0.90</span>, 
+             <span class="dt">alternative           =</span> <span class="st">&quot;less&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">impute</span>(<span class="dt">no_of_impute =</span> <span class="dv">25</span>, 
+         <span class="dt">number_mcmc  =</span> <span class="dv">1000</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">beta_prior</span>(<span class="dt">a0 =</span> <span class="dv">5</span>, 
+             <span class="dt">b0 =</span> <span class="dv">5</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">historical_binomial</span>(<span class="dt">y0_treatment      =</span> <span class="dv">5</span>, 
+                      <span class="dt">N0_treatment      =</span> <span class="dv">55</span>,
+                      <span class="dt">discount_function =</span> <span class="st">&quot;identity&quot;</span>,
+                      <span class="dt">y0_control        =</span> <span class="ot">NULL</span>, 
+                      <span class="dt">N0_control        =</span> <span class="ot">NULL</span>,
+                      <span class="dt">alpha_max         =</span> <span class="dv">1</span>, 
+                      <span class="dt">fix_alpha         =</span> <span class="ot">FALSE</span>,
+                      <span class="dt">weibull_scale     =</span> <span class="fl">0.135</span>, 
+                      <span class="dt">weibull_shape     =</span> <span class="dv">3</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">simulate</span>(<span class="dt">no_of_sim =</span> <span class="dv">10</span>)
+
+<span class="kw">str</span>(value)
+<span class="co">#&gt; List of 8</span>
+<span class="co">#&gt;  $ input                       :List of 22</span>
+<span class="co">#&gt;   ..$ p_treatment          : num 0.08</span>
+<span class="co">#&gt;   ..$ lambda               : num [1:2] 0.3 1</span>
+<span class="co">#&gt;   ..$ lambda_time          : num 25</span>
+<span class="co">#&gt;   ..$ N_total              : num 900</span>
+<span class="co">#&gt;   ..$ EndofStudy           : num 50</span>
+<span class="co">#&gt;   ..$ interim_look         : num [1:3] 600 700 800</span>
+<span class="co">#&gt;   ..$ prop_loss_to_followup: num 0.1</span>
+<span class="co">#&gt;   ..$ h0                   : num -0.03</span>
+<span class="co">#&gt;   ..$ futility_prob        : num 0.05</span>
+<span class="co">#&gt;   ..$ prob_ha              : num 0.95</span>
+<span class="co">#&gt;   ..$ expected_success_prob: num 0.9</span>
+<span class="co">#&gt;   ..$ alternative          : chr &quot;less&quot;</span>
+<span class="co">#&gt;   ..$ N_impute             : num 25</span>
+<span class="co">#&gt;   ..$ number_mcmc          : num 1000</span>
+<span class="co">#&gt;   ..$ prior                : num [1:2] 5 5</span>
+<span class="co">#&gt;   ..$ y0_treatment         : num 5</span>
+<span class="co">#&gt;   ..$ N0_treatment         : num 55</span>
+<span class="co">#&gt;   ..$ discount_function    : chr &quot;identity&quot;</span>
+<span class="co">#&gt;   ..$ alpha_max            : num 1</span>
+<span class="co">#&gt;   ..$ fix_alpha            : logi FALSE</span>
+<span class="co">#&gt;   ..$ weibull_scale        : num 0.135</span>
+<span class="co">#&gt;   ..$ weibull_shape        : num 3</span>
+<span class="co">#&gt;  $ power                       :'data.frame':    4 obs. of  2 variables:</span>
+<span class="co">#&gt;   ..$ interim_looks: num [1:4] 600 700 800 900</span>
+<span class="co">#&gt;   ..$ power        : num [1:4] 0.5 0.7 0.8 0.9</span>
+<span class="co">#&gt;  $ type1_error                 : num 0</span>
+<span class="co">#&gt;  $ est_final                   : num [1:10] 0.0999 0.0869 0.0873 0.0781 0.078 ...</span>
+<span class="co">#&gt;  $ post_prob_accept_alternative: num [1:10] 0.845 0.991 0.968 0.997 0.996 0.994 0.991 1 0.983 0.994</span>
+<span class="co">#&gt;  $ N_enrolled                  : num [1:10] 800 800 700 700 600 600 600 600 900 600</span>
+<span class="co">#&gt;  $ stop_expect_success         : num [1:10] 0 1 1 1 1 1 1 1 0 1</span>
+<span class="co">#&gt;  $ stop_futility               : num [1:10] 1 0 0 0 0 0 0 0 0 0</span></code></pre></div>
+</div>
+<div id="two-arm-trial" class="section level2">
+<h2>Two-arm trial</h2>
+<p>In this section, we will illustrate how to perform the design of a two-arm trial without incorporating historical data. The example will compute the type 1 error, power, and other outputs for a superiority trial. The study hypothesis is <span class="math display">\[H_0: \theta_{treatment} - \theta_{control} \leq 0 \qquad H_A: \theta_{treatment} - \theta_{control} &gt; 0.\]</span></p>
+<p>The binomial events are simulated using an event rate of 0.15 for the treatment group and 0.12 for the control group. The total sample size is 400, with a study length of 30 days. A 15% loss to follow up is assumed. Further, we will illustrate block randomization. The following code simulates a trial 10 times using the piping procedure.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+value &lt;-<span class="st"> </span><span class="kw">binomial_outcome</span>(<span class="dt">p_treatment =</span> <span class="fl">0.15</span>, 
+                          <span class="dt">p_control   =</span> <span class="fl">0.12</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">study_details</span>(<span class="dt">total_sample_size     =</span> <span class="dv">400</span>, 
+                <span class="dt">study_period          =</span> <span class="dv">30</span>,
+                <span class="dt">interim_look          =</span> <span class="dv">350</span>,
+                <span class="dt">prop_loss_to_followup =</span> <span class="fl">0.15</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">hypothesis</span>(<span class="dt">delta                 =</span> <span class="dv">0</span>, 
+             <span class="dt">futility_prob         =</span> <span class="fl">0.10</span>, 
+             <span class="dt">prob_accept_ha        =</span> <span class="fl">0.975</span>,
+             <span class="dt">expected_success_prob =</span> <span class="dv">1</span>, 
+             <span class="dt">alternative           =</span> <span class="st">&quot;greater&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">randomize</span>(<span class="dt">block_size          =</span> <span class="dv">9</span>, 
+            <span class="dt">randomization_ratio =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">5</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">impute</span>(<span class="dt">no_of_impute =</span> <span class="dv">20</span>, 
+         <span class="dt">number_mcmc  =</span> <span class="dv">5000</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">beta_prior</span>(<span class="dt">a0 =</span> <span class="dv">0</span>, 
+             <span class="dt">b0 =</span> <span class="dv">0</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">simulate</span>(<span class="dt">no_of_sim =</span> <span class="dv">10</span>)
+
+<span class="kw">str</span>(value)
+<span class="co">#&gt; List of 8</span>
+<span class="co">#&gt;  $ input                       :List of 16</span>
+<span class="co">#&gt;   ..$ p_treatment          : num 0.15</span>
+<span class="co">#&gt;   ..$ p_control            : num 0.12</span>
+<span class="co">#&gt;   ..$ N_total              : num 400</span>
+<span class="co">#&gt;   ..$ EndofStudy           : num 30</span>
+<span class="co">#&gt;   ..$ interim_look         : num 350</span>
+<span class="co">#&gt;   ..$ prop_loss_to_followup: num 0.15</span>
+<span class="co">#&gt;   ..$ h0                   : num 0</span>
+<span class="co">#&gt;   ..$ futility_prob        : num 0.1</span>
+<span class="co">#&gt;   ..$ prob_ha              : num 0.975</span>
+<span class="co">#&gt;   ..$ expected_success_prob: num 1</span>
+<span class="co">#&gt;   ..$ alternative          : chr &quot;greater&quot;</span>
+<span class="co">#&gt;   ..$ block                : num 9</span>
+<span class="co">#&gt;   ..$ rand_ratio           : num [1:2] 4 5</span>
+<span class="co">#&gt;   ..$ N_impute             : num 20</span>
+<span class="co">#&gt;   ..$ number_mcmc          : num 5000</span>
+<span class="co">#&gt;   ..$ prior                : num [1:2] 0 0</span>
+<span class="co">#&gt;  $ power                       :'data.frame':    2 obs. of  2 variables:</span>
+<span class="co">#&gt;   ..$ interim_looks: num [1:2] 350 400</span>
+<span class="co">#&gt;   ..$ power        : num [1:2] 0 0</span>
+<span class="co">#&gt;  $ type1_error                 : num 0</span>
+<span class="co">#&gt;  $ est_final                   : num [1:10] -0.019967 0.000161 0.031991 0.029932 0.056089 ...</span>
+<span class="co">#&gt;  $ post_prob_accept_alternative: num [1:10] 0.316 0.504 0.834 0.779 0.942 ...</span>
+<span class="co">#&gt;  $ N_enrolled                  : num [1:10] 350 350 350 350 400 400 350 350 350 350</span>
+<span class="co">#&gt;  $ stop_expect_success         : num [1:10] 0 0 0 0 0 0 0 0 0 0</span>
+<span class="co">#&gt;  $ stop_futility               : num [1:10] 1 1 1 1 0 0 1 1 1 1</span></code></pre></div>
+</div>
+</div>
+<div id="analysis" class="section level1">
+<h1>Analysis</h1>
+<p>In this section, we will demonstrate how to run an adaptive Bayesian trial using <strong>bayesCT</strong>. A sample dataset is provided in the package. The dataset <strong>binomialdata</strong> contains the results of 300 subjects from a two-arm trial with binomial outcome. The <code>complete</code> column indicates whether the outcome was observed, i.e., loss to follow-up.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(binomialdata)
+
+<span class="kw">head</span>(binomialdata)
+<span class="co">#&gt;         id treatment outcome complete</span>
+<span class="co">#&gt; 1 Patient1         1       0        0</span>
+<span class="co">#&gt; 2 Patient2         0       0        1</span>
+<span class="co">#&gt; 3 Patient3         1       0        1</span>
+<span class="co">#&gt; 4 Patient4         0       0        1</span>
+<span class="co">#&gt; 5 Patient5         0       1        1</span>
+<span class="co">#&gt; 6 Patient6         0       0        1</span></code></pre></div>
+<p>The minimum input needed to run an adaptive Bayesian trial is the data itself. The <strong>data_binomial</strong> input allows the input of the data. The treatment group (0 for control, 1 for treatment) and outcome input are essential for the analysis. However, if the complete input is not provided, the function assumes the outcome data is complete. A default analysis is carried out below.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">input &lt;-<span class="st"> </span><span class="kw">data_binomial</span>(<span class="dt">treatment =</span> binomialdata<span class="op">$</span>treatment,
+                       <span class="dt">outcome   =</span> binomialdata<span class="op">$</span>outcome,
+                       <span class="dt">complete  =</span> binomialdata<span class="op">$</span>complete)
+
+out &lt;-<span class="st"> </span>input <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">analysis</span>(<span class="dt">type =</span> <span class="st">&quot;binomial&quot;</span>)
+
+<span class="kw">str</span>(out)
+<span class="co">#&gt; List of 11</span>
+<span class="co">#&gt;  $ prob_of_accepting_alternative: num 0.95</span>
+<span class="co">#&gt;  $ margin                       : num 0</span>
+<span class="co">#&gt;  $ alternative                  : chr &quot;greater&quot;</span>
+<span class="co">#&gt;  $ N_treatment                  : num 125</span>
+<span class="co">#&gt;  $ N_control                    : int 137</span>
+<span class="co">#&gt;  $ N_complete                   : num 262</span>
+<span class="co">#&gt;  $ N_enrolled                   : int 300</span>
+<span class="co">#&gt;  $ post_prob_accept_alternative : num 0.994</span>
+<span class="co">#&gt;  $ est_final                    : num 0.124</span>
+<span class="co">#&gt;  $ stop_futility                : num 0</span>
+<span class="co">#&gt;  $ stop_expected_success        : num 1</span></code></pre></div>
+<p>We’ll now illustrate using piping to carry out the complete analysis. First, we’ll assume the following hypothesis: <span class="math display">\[H_0:\theta_{treatment} - \theta_{control} &lt;= 0.02 \quad H_A: \theta_{treatment} - \theta_{control} &gt; 0.02\]</span> The delta and alternative used to analyze the trial is 0.02 and “greater” respectively. The probability of accepting the alternative is 0.95, the probability of stopping for futility is 0.05, and the probability of stopping for success is 0.90. We will carry out imputations on subjects loss to follow up. Additionally, we will incorporate historical data on the treatment arm.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">out &lt;-<span class="st"> </span><span class="kw">data_binomial</span>(<span class="dt">treatment =</span> binomialdata<span class="op">$</span>treatment,
+                     <span class="dt">outcome   =</span> binomialdata<span class="op">$</span>outcome,
+                     <span class="dt">complete  =</span> binomialdata<span class="op">$</span>complete) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">hypothesis</span>(<span class="dt">delta                 =</span> <span class="fl">0.02</span>, 
+             <span class="dt">futility_prob         =</span> <span class="fl">0.05</span>, 
+             <span class="dt">prob_accept_ha        =</span> <span class="fl">0.95</span>,
+             <span class="dt">expected_success_prob =</span> <span class="fl">0.90</span>, 
+             <span class="dt">alternative           =</span> <span class="st">&quot;greater&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">impute</span>(<span class="dt">no_of_impute =</span> <span class="dv">50</span>, 
+         <span class="dt">number_mcmc  =</span> <span class="dv">10000</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">beta_prior</span>(<span class="dt">a0 =</span> <span class="dv">3</span>, 
+             <span class="dt">b0 =</span> <span class="dv">3</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">historical_binomial</span>(<span class="dt">y0_treatment      =</span> <span class="dv">12</span>, 
+                      <span class="dt">N0_treatment      =</span> <span class="dv">100</span>,
+                      <span class="dt">y0_control        =</span> <span class="ot">NULL</span>, 
+                      <span class="dt">N0_control        =</span> <span class="ot">NULL</span>,
+                      <span class="dt">discount_function =</span> <span class="st">&quot;weibull&quot;</span>,
+                      <span class="dt">alpha_max         =</span> <span class="dv">1</span>, 
+                      <span class="dt">fix_alpha         =</span> <span class="ot">FALSE</span>,
+                      <span class="dt">weibull_scale     =</span> <span class="fl">0.135</span>, 
+                      <span class="dt">weibull_shape     =</span> <span class="dv">3</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">analysis</span>(<span class="dt">type =</span> <span class="st">&quot;binomial&quot;</span>)
+
+<span class="kw">str</span>(out)
+<span class="co">#&gt; List of 11</span>
+<span class="co">#&gt;  $ prob_of_accepting_alternative: num 0.95</span>
+<span class="co">#&gt;  $ margin                       : num 0.02</span>
+<span class="co">#&gt;  $ alternative                  : chr &quot;greater&quot;</span>
+<span class="co">#&gt;  $ N_treatment                  : num 125</span>
+<span class="co">#&gt;  $ N_control                    : int 137</span>
+<span class="co">#&gt;  $ N_complete                   : num 262</span>
+<span class="co">#&gt;  $ N_enrolled                   : int 300</span>
+<span class="co">#&gt;  $ post_prob_accept_alternative : num 0.956</span>
+<span class="co">#&gt;  $ est_final                    : num 0.108</span>
+<span class="co">#&gt;  $ stop_futility                : num 0</span>
+<span class="co">#&gt;  $ stop_expected_success        : num 0</span></code></pre></div>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
