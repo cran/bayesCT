@@ -133,39 +133,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 devtools<span class="op">::</span><span class="kw">install_version</span>(<span class="st">&quot;bayesCT&quot;</span>, <span class="dt">version =</span> <span class="st">&quot;x.x.x&quot;</span>, <span class="dt">repos =</span> <span class="st">&quot;http://cran.us.r-project.org&quot;</span>)</code></pre></div>
 <p>The second option is to download the most recent stable version through GitHub:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;thevaachandereng/bayesCT&quot;</span>)
-<span class="ot">FALSE</span> Downloading GitHub repo thevaachandereng<span class="op">/</span>bayesCT<span class="op">@</span>master
-<span class="ot">FALSE</span> 
-<span class="ot">FALSE</span>   
-   checking <span class="cf">for</span> file ‘<span class="op">/</span>private<span class="op">/</span>var<span class="op">/</span>folders<span class="op">/</span>sj<span class="op">/</span>qvf99_sx0ts6pzr_5rdx53dc0000gn<span class="op">/</span>T<span class="op">/</span>Rtmp1gzNLB<span class="op">/</span>remotese879305531a2<span class="op">/</span>thevaachandereng<span class="op">-</span>bayesCT<span class="op">-</span>23ae042<span class="op">/</span>DESCRIPTION’ ...
-  
-✔  checking <span class="cf">for</span> file ‘<span class="op">/</span>private<span class="op">/</span>var<span class="op">/</span>folders<span class="op">/</span>sj<span class="op">/</span>qvf99_sx0ts6pzr_5rdx53dc0000gn<span class="op">/</span>T<span class="op">/</span>Rtmp1gzNLB<span class="op">/</span>remotese879305531a2<span class="op">/</span>thevaachandereng<span class="op">-</span>bayesCT<span class="op">-</span>23ae042<span class="op">/</span>DESCRIPTION’ (373ms)
-<span class="ot">FALSE</span> 
-  
-─  preparing ‘bayesCT’<span class="op">:</span>
-<span class="ot">FALSE</span> 
-  
-   checking DESCRIPTION meta<span class="op">-</span>information ...
-  
-✔  checking DESCRIPTION meta<span class="op">-</span>information
-<span class="ot">FALSE</span> 
-  
-─  checking <span class="cf">for</span> LF line<span class="op">-</span>endings <span class="cf">in</span> source and make files and shell scripts
-<span class="ot">FALSE</span> 
-  
-─  checking <span class="cf">for</span> empty or unneeded directories
-<span class="ot">FALSE</span> 
-  
-─  looking to see <span class="cf">if</span> a ‘data<span class="op">/</span>datalist’ file should be added
-<span class="ot">FALSE</span> 
-  
-─  building ‘bayesCT_<span class="fl">0.99</span>.<span class="fl">0.</span>tar.gz’
-<span class="ot">FALSE</span> 
-  
-   
-<span class="ot">FALSE</span> 
-<span class="ot">FALSE</span> Installing package into <span class="st">'/private/var/folders/sj/qvf99_sx0ts6pzr_5rdx53dc0000gn/T/RtmpB6KioO/Rinste86631103d17'</span>
-<span class="ot">FALSE</span> (as <span class="st">'lib'</span> is unspecified)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;thevaachandereng/bayesCT&quot;</span>)</code></pre></div>
 <p>After successful installation, the package must be loaded into the working space:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(bayesCT)
 <span class="co">#&gt; </span>
@@ -188,9 +156,9 @@ devtools<span class="op">::</span><span class="kw">install_version</span>(<span 
 \right. \]</span></p>
 <p>Then, to simulate individual patient enrollment dates with a sample size (<code>N_total</code>) of 50, we use</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">enrollment</span>(<span class="dt">param =</span> <span class="kw">c</span>(<span class="fl">0.3</span>, <span class="fl">0.7</span>, <span class="fl">0.9</span>, <span class="fl">1.2</span>), <span class="dt">N_total =</span> <span class="dv">50</span>, <span class="dt">time =</span> <span class="kw">c</span>(<span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">15</span>))
-<span class="co">#&gt;  [1]  0  1  2  2 11 11 13 14 15 15 16 18 19 19 24 24 25 25 25 26 27 28 28</span>
-<span class="co">#&gt; [24] 29 29 29 29 30 31 33 34 36 37 37 39 40 40 45 46 46 47 48 48 52 52 52</span>
-<span class="co">#&gt; [47] 55 57 58 58</span></code></pre></div>
+<span class="co">#&gt;  [1]  0  0  1  5  6  7  7  8 10 10 11 11 12 12 12 16 17 21 21 21 23 23 24</span>
+<span class="co">#&gt; [24] 25 25 26 28 29 29 34 34 35 35 35 36 37 38 38 39 39 39 39 40 41 43 44</span>
+<span class="co">#&gt; [47] 46 47 47 49</span></code></pre></div>
 </div>
 <div id="randomization-scheme" class="section level1">
 <h1>Randomization Scheme</h1>
@@ -199,17 +167,17 @@ devtools<span class="op">::</span><span class="kw">install_version</span>(<span 
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">randomization</span>(<span class="dt">N_total =</span> <span class="dv">140</span>, <span class="dt">block =</span> <span class="dv">7</span>, <span class="dt">allocation =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">1</span>))</code></pre></div>
 <p>will not work (and will return an error) because the sum of the allocation is not a multiple of the block, i.e., <span class="math inline">\(2+1=3\)</span> is not a multiple of <span class="math inline">\(7\)</span>. Changing the block size to 6 will work:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">randomization</span>(<span class="dt">N_total =</span> <span class="dv">140</span>, <span class="dt">block =</span> <span class="dv">6</span>, <span class="dt">allocation =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">1</span>))
-<span class="co">#&gt;   [1] 0 1 0 0 0 1 0 0 0 1 1 0 1 1 0 0 0 0 0 0 1 1 0 0 1 0 1 0 0 0 0 1 0 1 0</span>
-<span class="co">#&gt;  [36] 0 0 1 0 0 1 0 0 1 0 0 0 1 0 0 1 0 0 1 1 1 0 0 0 0 0 0 1 1 0 0 0 1 0 0</span>
-<span class="co">#&gt;  [71] 0 1 1 0 1 0 0 0 0 0 0 0 1 1 1 1 0 0 0 0 0 0 1 0 0 1 1 0 0 1 0 0 1 0 0</span>
-<span class="co">#&gt; [106] 0 1 0 0 0 1 0 1 0 0 0 0 1 1 0 0 0 0 1 1 0 0 0 0 1 0 1 0 0 1 0 0 1 0 0</span></code></pre></div>
+<span class="co">#&gt;   [1] 1 0 1 0 0 0 1 0 0 0 1 0 1 0 0 0 0 1 1 0 0 0 0 1 1 0 1 0 0 0 0 1 0 1 0</span>
+<span class="co">#&gt;  [36] 0 0 0 0 1 1 0 0 1 0 0 1 0 0 0 1 0 1 0 1 0 0 0 0 1 0 0 1 0 0 1 0 0 0 0</span>
+<span class="co">#&gt;  [71] 1 1 0 0 1 0 1 0 0 0 1 0 1 0 1 0 1 0 0 0 1 1 0 0 0 0 0 0 0 1 0 1 1 1 0</span>
+<span class="co">#&gt; [106] 0 0 0 1 0 1 0 0 0 1 0 0 0 1 0 0 1 1 0 0 0 0 1 1 0 0 0 0 1 0 0 1 0 1 0</span></code></pre></div>
 <p>In the code above, the total sample size is 140, the block size is 6 and the randomization ratio is 2:1 for control to treatment. Since <span class="math inline">\(2+1 = 3\)</span> is a multiple of the block size of 6, this allocation is valid.</p>
 <p>Complete randomization can be performed by setting the block size equal to the total sample size:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">randomization</span>(<span class="dt">N_total =</span> <span class="dv">120</span>, <span class="dt">block =</span> <span class="dv">120</span>, <span class="dt">allocation =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">1</span>))
-<span class="co">#&gt;   [1] 0 0 0 0 0 1 1 0 0 0 0 0 0 1 0 1 0 0 0 0 0 1 0 1 0 0 1 0 1 0 1 0 0 0 1</span>
-<span class="co">#&gt;  [36] 1 0 0 0 0 0 1 0 1 0 0 1 0 0 1 0 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 0</span>
-<span class="co">#&gt;  [71] 1 0 1 0 0 1 0 0 1 0 1 0 1 0 0 1 0 1 1 1 0 0 1 0 1 0 0 0 0 1 1 0 0 1 0</span>
-<span class="co">#&gt; [106] 1 0 0 1 0 1 0 0 1 0 1 0 0 0 0</span></code></pre></div>
+<span class="co">#&gt;   [1] 0 1 0 0 0 0 0 0 1 0 0 0 0 1 1 0 0 0 1 0 0 0 0 1 1 1 0 0 0 1 0 1 1 1 1</span>
+<span class="co">#&gt;  [36] 1 0 0 0 1 0 0 1 0 1 0 0 1 1 0 1 0 0 0 1 0 0 0 1 0 0 0 0 0 0 0 0 1 1 0</span>
+<span class="co">#&gt;  [71] 0 0 0 0 0 0 1 0 0 0 0 1 1 0 1 0 0 0 0 0 0 1 0 1 0 0 0 1 0 0 1 1 0 0 0</span>
+<span class="co">#&gt; [106] 1 1 1 0 0 0 1 1 1 0 0 0 1 0 0</span></code></pre></div>
 </div>
 <div id="incorporation-of-historical-data" class="section level1">
 <h1>Incorporation of Historical Data</h1>

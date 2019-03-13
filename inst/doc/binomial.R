@@ -1,5 +1,6 @@
 ## ----setup, echo=FALSE, results="hide"-----------------------------------
 knitr::opts_chunk$set(comment = "#>", collapse = TRUE)
+suppressWarnings(RNGversion("3.5.0"))
 set.seed(28999)
 
 ## ---- echo = FALSE, message = FALSE--------------------------------------
