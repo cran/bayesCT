@@ -1,7 +1,7 @@
 Package: bayesCT
 Type: Package
 Title: Simulation and Analysis of Adaptive Bayesian Clinical Trials
-Version: 0.99.1
+Version: 0.99.2
 Authors@R: c(person(given = "Thevaa", family = "Chandereng", role = c("aut", "cre", "cph"), 
              email = "chandereng@wisc.edu", comment = c(ORCID = "0000-0003-4078-9176")), 
              person("Donald", "Musgrove", email = "donald.r.musgrove@medtronic.com", role = c("aut", "cph")), 
@@ -17,12 +17,13 @@ NeedsCompilation: no
 URL: https://github.com/thevaachandereng/bayesCT/
 BugReports: https://github.com/thevaachandereng/bayesCT/issues/
 Encoding: UTF-8
+Depends: R (>= 2.10)
 LazyData: true
 RoxygenNote: 6.1.1
 Suggests: testthat, rmarkdown, pkgdown, devtools, knitr
 VignetteBuilder: knitr
-Imports: bayesDP, dplyr, purrr, magrittr
-Packaged: 2019-03-13 17:58:59 UTC; thevaasiinenchandereng
+Imports: bayesDP, dplyr, purrr, msm, survival, magrittr
+Packaged: 2020-02-09 06:41:07 UTC; thevaasiinenchandereng
 Author: Thevaa Chandereng [aut, cre, cph]
     (<https://orcid.org/0000-0003-4078-9176>),
   Donald Musgrove [aut, cph],
@@ -32,4 +33,4 @@ Author: Thevaa Chandereng [aut, cre, cph]
   Theodore Lystig [aut, cph]
 Maintainer: Thevaa Chandereng <chandereng@wisc.edu>
 Repository: CRAN
-Date/Publication: 2019-03-13 18:33:29 UTC
+Date/Publication: 2020-02-09 11:50:03 UTC

@@ -82,13 +82,14 @@ str(output)
 value <- value %>%
   historical_binomial(y0_treatment      = 5, 
                       N0_treatment      = 55,
-					  discount_function = "identity",
+                      discount_function = "identity",
                       y0_control        = NULL, 
-					  N0_control        = NULL,
+                      N0_control        = NULL,
                       alpha_max         = 1, 
-					  fix_alpha         = FALSE,
+                      fix_alpha         = FALSE,
                       weibull_scale     = 0.135, 
-					  weibull_shape     = 3)
+                      weibull_shape     = 3,
+                      method            = "fixed")
 
 output <- value %>%
   simulate(no_of_sim = 10)
@@ -120,7 +121,8 @@ value <- binomial_outcome(p_treatment = 0.08) %>%
                       alpha_max         = 1, 
 					  fix_alpha         = FALSE,
                       weibull_scale     = 0.135, 
-					  weibull_shape     = 3) %>%
+					  weibull_shape     = 3, 
+                      method            = "fixed") %>%
   simulate(no_of_sim = 10)
 
 str(value)
@@ -184,7 +186,8 @@ out <- data_binomial(treatment = binomialdata$treatment,
                       alpha_max         = 1, 
 					  fix_alpha         = FALSE,
                       weibull_scale     = 0.135, 
-					  weibull_shape     = 3) %>%
+					  weibull_shape     = 3, 
+                      method            = "fixed") %>%
   analysis(type = "binomial")
 
 str(out)
