@@ -1,26 +1,26 @@
-## ----setup, echo=FALSE, results="hide"-----------------------------------
+## ----setup, echo=FALSE, results="hide"----------------------------------------
 knitr::opts_chunk$set(comment = "#>", collapse = TRUE)
 suppressWarnings(RNGversion("3.5.0"))
 set.seed(28999)
 
-## ---- echo = FALSE, message = FALSE--------------------------------------
+## ---- echo = FALSE, message = FALSE-------------------------------------------
 library(bayesCT)
 
-## ----opcbinomial---------------------------------------------------------
+## ----opcbinomial--------------------------------------------------------------
 value <- binomial_outcome(p_treatment = 0.08) %>%
    study_details(total_sample_size     = 900, 
                  study_period          = 50,
                  interim_look          = NULL,
                  prop_loss_to_followup = 0.10)
 
-# Simulate 10 trials
+# Simulate 2 trials
 output <- value %>%
-  simulate(no_of_sim = 10)
+  simulate(no_of_sim = 2)
 
 # Structure of the simulation output
 str(output)
 
-## ----opcinterimlook------------------------------------------------------
+## ----opcinterimlook-----------------------------------------------------------
 # Adding interim looks
 value <- value %>%
   study_details(total_sample_size     = 900, 
@@ -28,24 +28,24 @@ value <- value %>%
                 interim_look          = c(600, 700, 800),
                 prop_loss_to_followup = 0.10)
 
-# Simulate 10 trials
+# Simulate 2 trials
 output <- value %>% 
-  simulate(no_of_sim = 10)
+  simulate(no_of_sim = 2)
 
 # Structure of the simulation output
 str(output)
 
-## ----opcenrollment-------------------------------------------------------
+## ----opcenrollment------------------------------------------------------------
 value <- value %>%
   enrollment_rate(lambda = c(0.3, 1), 
                   time   = 25)
 
 output <- value %>%
-  simulate(no_of_sim = 10)
+  simulate(no_of_sim = 2)
 
 str(output)
 
-## ----opchypo-------------------------------------------------------------
+## ----opchypo------------------------------------------------------------------
 value <- value %>%
   hypothesis(delta                 = -0.03, 
              futility_prob         = 0.05, 
@@ -54,13 +54,13 @@ value <- value %>%
 			 alternative           = "less")
 
 output <- value %>%
-  simulate(no_of_sim = 10)
+  simulate(no_of_sim = 2)
 
 str(output)
 
-## ----opcimpute-----------------------------------------------------------
+## ----opcimpute----------------------------------------------------------------
 value <- value %>%
-  impute(no_of_impute = 25, 
+  impute(no_of_impute = 5, 
          number_mcmc  = 1000)
 
 output <- value %>%
@@ -68,17 +68,17 @@ output <- value %>%
 
 str(output)
 
-## ----opcprior------------------------------------------------------------
+## ----opcprior-----------------------------------------------------------------
 value <- value %>%
   beta_prior(a0 = 5, 
              b0 = 5)
 
 output <- value %>%
-  simulate(no_of_sim = 10)
+  simulate(no_of_sim = 2)
 
 str(output)
 
-## ----opchist-------------------------------------------------------------
+## ----opchist------------------------------------------------------------------
 value <- value %>%
   historical_binomial(y0_treatment      = 5, 
                       N0_treatment      = 55,
@@ -92,11 +92,11 @@ value <- value %>%
                       method            = "fixed")
 
 output <- value %>%
-  simulate(no_of_sim = 10)
+  simulate(no_of_sim = 2)
 
 str(output)
 
-## ----opcoverall----------------------------------------------------------
+## ----opcoverall---------------------------------------------------------------
 value <- binomial_outcome(p_treatment = 0.08) %>%
   enrollment_rate(lambda = c(0.3, 1), 
                   time   = 25) %>%
@@ -123,11 +123,11 @@ value <- binomial_outcome(p_treatment = 0.08) %>%
                       weibull_scale     = 0.135, 
 					  weibull_shape     = 3, 
                       method            = "fixed") %>%
-  simulate(no_of_sim = 10)
+  simulate(no_of_sim = 2)
 
 str(value)
 
-## ----twoarmoverall-------------------------------------------------------
+## ----twoarmoverall------------------------------------------------------------
 
 value <- binomial_outcome(p_treatment = 0.15, 
                           p_control   = 0.12) %>%
@@ -142,20 +142,20 @@ value <- binomial_outcome(p_treatment = 0.15,
 			 alternative           = "greater") %>%
   randomize(block_size          = 9, 
             randomization_ratio = c(4, 5)) %>%
-  impute(no_of_impute = 20, 
+  impute(no_of_impute = 5, 
          number_mcmc  = 5000) %>%
   beta_prior(a0 = 0, 
              b0 = 0) %>%
-  simulate(no_of_sim = 10)
+  simulate(no_of_sim = 2)
 
 str(value)
 
-## ----data----------------------------------------------------------------
+## ----data---------------------------------------------------------------------
 data(binomialdata)
 
 head(binomialdata)
 
-## ----analysisdata--------------------------------------------------------
+## ----analysisdata-------------------------------------------------------------
 input <- data_binomial(treatment = binomialdata$treatment,
                        outcome   = binomialdata$outcome,
                        complete  = binomialdata$complete)
@@ -165,7 +165,7 @@ out <- input %>%
 
 str(out)
 
-## ----analysisall---------------------------------------------------------
+## ----analysisall--------------------------------------------------------------
 out <- data_binomial(treatment = binomialdata$treatment,
                      outcome   = binomialdata$outcome,
                      complete  = binomialdata$complete) %>%

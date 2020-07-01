@@ -1,12 +1,12 @@
-## ----setup, echo=FALSE, results="hide"-----------------------------------
+## ----setup, echo=FALSE, results="hide"----------------------------------------
 knitr::opts_chunk$set(comment = "#>", collapse = TRUE)
 suppressWarnings(RNGversion("3.5.0"))
 set.seed(28999)
 
-## ---- echo = FALSE, message = FALSE--------------------------------------
+## ---- echo = FALSE, message = FALSE-------------------------------------------
 library(bayesCT)
 
-## ----opcminimum----------------------------------------------------------
+## ----opcminimum---------------------------------------------------------------
 value <- survival_outcome(hazard_treatment = c(0.012, 0.008), 
                           cutpoint         = 30) %>%
   study_details(total_sample_size     = 200, 
@@ -15,14 +15,14 @@ value <- survival_outcome(hazard_treatment = c(0.012, 0.008),
                 prop_loss_to_followup = 0.1) 
  
 				
-# Simulate 10 trials
+# Simulate 2 trials
 output <- value %>%
-  simulate(no_of_sim = 5)
+  simulate(no_of_sim = 2)
 
 # Structure of the simulation output
 str(output)
 
-## ----opcinterimlook------------------------------------------------------
+## ----opcinterimlook-----------------------------------------------------------
 # Adding interim looks
 value <- value %>%
   study_details(total_sample_size     = 200, 
@@ -30,24 +30,24 @@ value <- value %>%
                 interim_look          = 180,
                 prop_loss_to_followup = 0.10)
 
-# Simulate 10 trials
+# Simulate 2 trials
 output <- value %>% 
-  simulate(no_of_sim = 5)
+  simulate(no_of_sim = 2)
 
 # Structure of the simulation output
 str(output)
 
-## ----opcenrollment-------------------------------------------------------
+## ----opcenrollment------------------------------------------------------------
 value <- value %>%
   enrollment_rate(lambda = c(0.25, 0.8), 
                   time   = 40)
 
 output <- value %>%
-  simulate(no_of_sim = 5)
+  simulate(no_of_sim = 2)
 
 str(output)
 
-## ----opchypo-------------------------------------------------------------
+## ----opchypo------------------------------------------------------------------
 value <- value %>%
   hypothesis(delta                  = 0.50,
              futility_prob          = 0.05,
@@ -56,38 +56,38 @@ value <- value %>%
              alternative            = "less")
 
 output <- value %>%
-  simulate(no_of_sim = 5)
+  simulate(no_of_sim = 2)
 
 str(output)
 
-## ----opcimpute-----------------------------------------------------------
+## ----opcimpute----------------------------------------------------------------
 value <- value %>%
   impute(no_of_impute = 10, 
          number_mcmc  = 2000)
 
 output <- value %>%
-  simulate(no_of_sim = 5)
+  simulate(no_of_sim = 2)
 
 str(output)
 
-## ----opcprior------------------------------------------------------------
+## ----opcprior-----------------------------------------------------------------
 value <- value %>%
   gamma_prior(a0 = .2, 
              b0 = .2)
 
 output <- value %>%
-  simulate(no_of_sim = 5)
+  simulate(no_of_sim = 2)
 
 str(output)
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 hist_data <- data.frame(time      = rexp(100, 0.011),
                         event     = rbinom(100, 1, 0.8),
                         treatment = rep(1, 100))
 
 str(hist_data)
 
-## ----opchist-------------------------------------------------------------
+## ----opchist------------------------------------------------------------------
 value <- value %>%
   historical_survival(time              = hist_data$time, 
                       treatment         = hist_data$treatment,
@@ -100,11 +100,11 @@ value <- value %>%
                       method            = "mc")
 
 output <- value %>%
-  simulate(no_of_sim = 5)
+  simulate(no_of_sim = 2)
 
 str(output)
 
-## ----opcoverall----------------------------------------------------------
+## ----opcoverall---------------------------------------------------------------
 value <- survival_outcome(hazard_treatment = c(0.012, 0.008), 
                           cutpoint         = 30) %>%
   enrollment_rate(lambda = c(0.25, 0.8), 
@@ -131,11 +131,11 @@ value <- survival_outcome(hazard_treatment = c(0.012, 0.008),
                       weibull_scale     = 0.135, 
                       weibull_shape     = 3,
                       method            = "mc") %>%
-  simulate(no_of_sim = 5)
+  simulate(no_of_sim = 2)
 
 str(value)
 
-## ----twoarmall-----------------------------------------------------------
+## ----twoarmall----------------------------------------------------------------
 value <- survival_outcome(hazard_treatment = c(0.01, 0.012),
                           hazard_control   = c(0.015, 0.017),
                           cutpoint         = 25) %>%
@@ -154,16 +154,16 @@ value <- survival_outcome(hazard_treatment = c(0.01, 0.012),
                   time = NULL) %>%
   randomize(block_size          = c(4, 6), 
             randomization_ratio = c(1, 1)) %>%
-  simulate(no_of_sim = 10)
+  simulate(no_of_sim = 2)
 
 str(value)
 
-## ----data----------------------------------------------------------------
+## ----data---------------------------------------------------------------------
 data(survivaldata)
 
 head(survivaldata)
 
-## ----analysisdata--------------------------------------------------------
+## ----analysisdata-------------------------------------------------------------
 input <- data_survival(time       = survivaldata$time,
                        treatment  = survivaldata$treatment,
                        event      = survivaldata$event)
@@ -173,7 +173,7 @@ out <- input %>%
 
 str(out)
 
-## ----analysisall---------------------------------------------------------
+## ----analysisall--------------------------------------------------------------
 out <- data_survival(time       = survivaldata$time,
                      treatment  = survivaldata$treatment,
                      event      = survivaldata$event) %>%

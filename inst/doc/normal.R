@@ -1,12 +1,12 @@
-## ----setup, echo=FALSE, results="hide"-----------------------------------
+## ----setup, echo=FALSE, results="hide"----------------------------------------
 knitr::opts_chunk$set(comment = "#>", collapse = TRUE)
 suppressWarnings(RNGversion("3.5.0"))
 set.seed(28999)
 
-## ---- message = FALSE, echo = FALSE--------------------------------------
+## ---- message = FALSE, echo = FALSE-------------------------------------------
 library(bayesCT)
 
-## ----opcminimum----------------------------------------------------------
+## ----opcminimum---------------------------------------------------------------
 value <- normal_outcome(mu_treatment = 120,
                         sd_treatment = 5.5) %>%
   study_details(total_sample_size     = 400, 
@@ -14,14 +14,14 @@ value <- normal_outcome(mu_treatment = 120,
                 interim_look          = NULL,
                 prop_loss_to_followup = 0.10)
 				
-# Simulate 10 trials
+# Simulate 2 trials
 output <- value %>%
-  simulate(no_of_sim = 10)
+  simulate(no_of_sim = 2)
 
 # Structure of the simulation output
 str(output)
 
-## ----opcinterimlook------------------------------------------------------
+## ----opcinterimlook-----------------------------------------------------------
 # adding interim look
 value <- value %>%
   study_details(total_sample_size     = 400, 
@@ -29,24 +29,24 @@ value <- value %>%
                 interim_look          = c(350, 380),
                 prop_loss_to_followup = 0.10)
 
-# Simulate 10 trials
+# Simulate 2 trials
 output <- value %>%
-  simulate(no_of_sim = 10)
+  simulate(no_of_sim = 2)
 
 # Structure of the simulation output
 str(output)
 
-## ----opcenroll-----------------------------------------------------------
+## ----opcenroll----------------------------------------------------------------
 value <- value %>%
   enrollment_rate(lambda = c(0.4, 0.7), 
                   time = 40) 
 
 output <- value %>%
-  simulate(no_of_sim = 10)
+  simulate(no_of_sim = 2)
 
 str(output)
 
-## ----opchypo-------------------------------------------------------------
+## ----opchypo------------------------------------------------------------------
 value <- value %>%
    hypothesis(delta                 = -10, 
               futility_prob         = 0.10, 
@@ -55,21 +55,21 @@ value <- value %>%
 			  alternative           = "less")
 
 output <- value %>%
-  simulate(no_of_sim = 10)
+  simulate(no_of_sim = 2)
 
 str(output)
 
-## ----opcimpute-----------------------------------------------------------
+## ----opcimpute----------------------------------------------------------------
 value <- value %>%
   impute(no_of_impute = 20, 
          number_mcmc  = 2000)
 
 output <- value %>%
-  simulate(no_of_sim = 10)
+  simulate(no_of_sim = 2)
 
 str(output)
 
-## ----opcoverall----------------------------------------------------------
+## ----opcoverall---------------------------------------------------------------
 value <- normal_outcome(mu_treatment = 120,
                         sd_treatment = 5.5) %>%
   study_details(total_sample_size     = 400, 
@@ -85,12 +85,13 @@ value <- normal_outcome(mu_treatment = 120,
                   time   = 4) %>%
   randomize(block_size          = c(10, 20), 
             randomization_ratio = c(1, 1)) %>%
-  impute(no_of_impute = 20, 
-         number_mcmc  = 2000)
+  impute(no_of_impute = 5, 
+         number_mcmc  = 2000)  %>%
+  simulate(no_of_sim = 2)
 
 str(value)
 
-## ----twoarmall-----------------------------------------------------------
+## ----twoarmall----------------------------------------------------------------
 value <- normal_outcome(mu_treatment = 13, 
                         mu_control = 16, 
 						sd_treatment = 1.4, 
@@ -122,16 +123,16 @@ value <- normal_outcome(mu_treatment = 13,
                     weibull_scale     = 0.135, 
 					weibull_shape     = 3,
                       method            = "fixed") %>%
-  simulate(no_of_sim = 10)
+  simulate(no_of_sim = 2)
 
 str(value)
 
-## ----data----------------------------------------------------------------
+## ----data---------------------------------------------------------------------
 data(normaldata)
 
 head(normaldata)
 
-## ----analysisdatainput---------------------------------------------------
+## ----analysisdatainput--------------------------------------------------------
 input <- data_normal(treatment = normaldata$treatment, 
                      outcome   = normaldata$outcome, 
                      complete  = normaldata$complete) 
@@ -141,7 +142,7 @@ out <- input %>%
 
 str(out)
 
-## ----analysisall---------------------------------------------------------
+## ----analysisall--------------------------------------------------------------
 out <- data_normal(treatment = normaldata$treatment,
                    outcome   = normaldata$outcome, 
                    complete  = normaldata$complete) %>%
@@ -150,7 +151,7 @@ out <- data_normal(treatment = normaldata$treatment,
 			 prob_accept_ha        = 0.95,
              expected_success_prob = 0.90, 
 			 alternative           = "less") %>%
-  impute(no_of_impute = 40, 
+  impute(no_of_impute = 10, 
          number_mcmc  = 8000) %>%
   analysis(type = "normal")
 
